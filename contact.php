@@ -76,44 +76,49 @@ if(!empty($_POST['Nom']) && !empty($_POST['Prenom']) &&!empty($_POST['Email']) &
     echo "pas de connexion a la base !";
   }
  
+
+  // $pass = 'Poil250Poil250!!';
+
   use PHPMailer\PHPMailer\PHPMailer;
+
   require 'vendor/autoload.php';
   $mail = new PHPMailer;
   $mail->isSMTP();
-  $mail->SMTPDebug = 2;
   $mail->Host = 'smtp.gmail.com';
-  $mail->Port = 645;
+  $mail->Port = 587;
   $mail->SMTPAuth = true;
-  $mail->Username = 'Livai.ackerman02@gmail.com';
+  $mail->Username = 'livai.ackerman02@gmail.com';
   $mail->Password = 'Caline-1009';
-  $mail->setFrom('Livai.ackerman02@gmail.com', 'Alicia');
-  $mail->addReplyTo('Livai.ackerman02@gmail.com', 'Alicia');
-			if (!empty($_POST)) {
-				$point = strpos($_POST['Email'], ".");
-				$aroba = strpos($_POST['Email'], "@");
-				if ($point === false)
-					echo 'Votre Email doit comporter un point.<br>';
-				else if ($aroba === false)
-					echo 'Votre Email doit comporter un arobase.<br>';
-				else
-					echo 'Votre Email est : ' . $_POST['Email']. '<br>';
-					echo 'Votre telephone et le: ' .$_POST['telephone']. '<br>';
-					echo 'Votre message est : ' . $_POST['message']. '<br>';
-			}
- 			if(isset($_POST['message'])){
-			$entete = 'MIME-Version: 1.0' . "\r\n";
-			$entete .= 'Content-type: text/html; charset=utf-8' . "\r\n";
-			$entete .= 'From: ' .$_POST['Email']. "\r\n";
-			$message = '<h1>Message envoyé depuis la page Contact de monsite.fr</h1>;
-			<p><b>Nom : </b>' . $_POST['Nom'] . '<br>
-			<b>Email : </b>' . $_POST['Email'] . '<br>
-			<b>Message : </b>' . $_POST['message'] . '</p>';
-			$retour = mail('Livai.ackerman02@gmail.com', 'Envoi depuis formulaire', $message, $entete);
-			if($retour) {
-			echo '<p>Votre message a bien été envoyé.</p>';
-			};
-    }
+  $mail->setFrom('livai.ackerman02@gmail.com', 'Alicia');
+  $mail->addAddress('livai.ackerman02@gmail.com', 'Alicia Coca');
+
+//ajout d'une image telechargable
+  $mail->AddEmbeddedImage("images/bolt.jpg", "bolt", "images/bolt.jpg");
+
+  $mail->Body .= '<img src="cid : image"/><br/><br/><br/><br/><br/>';
+
+
+
+
+  if ($mail->addReplyTo(!empty($_POST['Email'])) || (!empty($_POST['Nom'])) || (!empty($_POST['telephone'])) || (!empty($_POST['Prenom']))) {
+      $mail->Subject = 'Formulaire de contact PHPMailer';
+      $mail->isHTML(false);
+      $mail->Body = <<<EOT
+      E-mail: {$_POST['Email']}
+      Nom: {$_POST['Nom']}
+      Prenom: {$_POST['Prenom']}
+      Message: {$_POST['message']}
+      EOT;
+      if (!$mail->send()) {
+          $msg = 'Désolé, quelque chose a mal tourné. Veuillez réessayer plus tard.';
+      } else {
+          $msg = 'Message envoyé ! Merci de nous avoir contactés.';
+      }
+  } else {
+      $msg = 'Contactez-nous !';
+  }
 ?>
+
 <!DOCTYPE html>
 <html>
   <head>
