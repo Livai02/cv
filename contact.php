@@ -72,9 +72,7 @@ if(!empty($_POST['Nom']) && !empty($_POST['Prenom']) &&!empty($_POST['Email']) &
         echo 'Impossible de traiter les données. Erreur : '.$e->getMessage();
     }
   
-  } else {
-    echo "pas de connexion a la base !";
-  }
+  } 
  
 
   // $pass = 'Poil250Poil250!!';
@@ -88,26 +86,19 @@ if(!empty($_POST['Nom']) && !empty($_POST['Prenom']) &&!empty($_POST['Email']) &
   $mail->Port = 587;
   $mail->SMTPAuth = true;
   $mail->Username = 'livai.ackerman02@gmail.com';
-  $mail->Password = 'Caline-1009';
+  $mail->Password = 'Alexandre-02';
   $mail->setFrom('livai.ackerman02@gmail.com', 'Alicia');
-  $mail->addAddress('livai.ackerman02@gmail.com', 'Alicia Coca');
-
-//ajout d'une image telechargable
-  $mail->AddEmbeddedImage("images/bolt.jpg", "bolt", "images/bolt.jpg");
-
-  $mail->Body .= '<img src="cid : image"/><br/><br/><br/><br/><br/>';
-
-
-
+  $mail->addAddress('livai.ackerman02@gmail.com', 'Alicia');
 
   if ($mail->addReplyTo(!empty($_POST['Email'])) || (!empty($_POST['Nom'])) || (!empty($_POST['telephone'])) || (!empty($_POST['Prenom']))) {
-      $mail->Subject = 'Formulaire de contact PHPMailer';
+      $mail->Subject = 'Formulaire de contact CV';
       $mail->isHTML(false);
       $mail->Body = <<<EOT
       E-mail: {$_POST['Email']}
       Nom: {$_POST['Nom']}
       Prenom: {$_POST['Prenom']}
       Message: {$_POST['message']}
+      telephone: {$_POST['telephone']}
       EOT;
       if (!$mail->send()) {
           $msg = 'Désolé, quelque chose a mal tourné. Veuillez réessayer plus tard.';
